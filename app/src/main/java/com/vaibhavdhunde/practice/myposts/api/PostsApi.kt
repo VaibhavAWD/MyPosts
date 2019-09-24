@@ -1,7 +1,6 @@
 package com.vaibhavdhunde.practice.myposts.api
 
 import com.vaibhavdhunde.practice.myposts.model.Post
-import com.vaibhavdhunde.practice.myposts.model.PostsResponse
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -12,7 +11,7 @@ import retrofit2.http.Path
 interface PostsApi {
 
     @GET("posts")
-    suspend fun getPosts(): Response<PostsResponse>
+    suspend fun getPosts(): Response<List<Post>>
 
     @GET("posts/{id}")
     suspend fun getPostById(
