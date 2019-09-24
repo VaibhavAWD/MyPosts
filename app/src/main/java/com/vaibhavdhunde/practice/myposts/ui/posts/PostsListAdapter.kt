@@ -5,10 +5,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.vaibhavdhunde.practice.myposts.model.Post
 
-class PostsListAdapter : ListAdapter<Post, PostViewHolder>(POST_COMPARATOR) {
+class PostsListAdapter(
+    private val viewModel: PostsViewModel
+) : ListAdapter<Post, PostViewHolder>(POST_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        return PostViewHolder(parent)
+        return PostViewHolder(parent, viewModel)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {

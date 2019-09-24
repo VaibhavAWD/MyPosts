@@ -1,4 +1,4 @@
-package com.vaibhavdhunde.practice.myposts.ui.posts
+package com.vaibhavdhunde.practice.myposts.ui.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,10 +11,10 @@ import com.vaibhavdhunde.practice.myposts.model.Post
 import com.vaibhavdhunde.practice.myposts.util.Event
 import kotlinx.coroutines.launch
 
-class PostsViewModel(private val repository: PostsRepository) : ViewModel() {
+class DetailsViewModel(private val repository: PostsRepository) : ViewModel() {
 
-    private val _posts = MutableLiveData<List<Post>>()
-    val posts: LiveData<List<Post>> = _posts
+    private val _post = MutableLiveData<Post>()
+    val post: LiveData<Post> = _post
 
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
@@ -25,23 +25,20 @@ class PostsViewModel(private val repository: PostsRepository) : ViewModel() {
     private val _showMessage = MutableLiveData<Event<String>>()
     val showMessage: LiveData<Event<String>> = _showMessage
 
-    private val _openPostDetails = MutableLiveData<Event<Int>>()
-    val openPostDetails: LiveData<Event<Int>> = _openPostDetails
-
-    fun loadPosts() {
+    fun loadPost(postId: Int) {
         _isDataLoading.value?.let { isLoading ->
-            if (isLoading) return@let
+            if (isLoading) return
         }
 
         _isDataAvailable.value?.let { isAvailable ->
-            if (isAvailable) return@let
+            if (isAvailable) return
         }
 
         viewModelScope.launch {
             _isDataLoading.postValue(true)
             try {
-                val posts = repository.getPosts()
-                onPostsLoaded(posts)
+                val post = repository.getPostById(postId)
+                onPostLoaded(post)
             } catch (e: ApiException) {
                 onDataNotAvailable()
                 showMessage(e.message!!)
@@ -52,31 +49,23 @@ class PostsViewModel(private val repository: PostsRepository) : ViewModel() {
         }
     }
 
-    private fun onPostsLoaded(posts: List<Post>?) {
-        if (posts == null) {
+    private fun onPostLoaded(post: Post?) {
+        if (post == null) {
             onDataNotAvailable()
             return
         }
-        _posts.postValue(posts)
+        _post.postValue(post)
         _isDataLoading.postValue(false)
-        if (posts.isEmpty()) {
-            onDataNotAvailable()
-        } else {
-            _isDataAvailable.postValue(true)
-        }
+        _isDataAvailable.postValue(true)
     }
 
     private fun onDataNotAvailable() {
-        _posts.postValue(null)
+        _post.postValue(null)
         _isDataLoading.postValue(false)
         _isDataAvailable.postValue(false)
     }
 
     private fun showMessage(message: String) {
         _showMessage.postValue(Event(message))
-    }
-
-    fun openPostDetails(postId: Int) {
-        _openPostDetails.postValue(Event(postId))
     }
 }

@@ -7,17 +7,24 @@
         <variable
             name="post"
             type="com.vaibhavdhunde.practice.myposts.model.Post" />
+
+        <variable
+            name="listener"
+            type="com.vaibhavdhunde.practice.myposts.ui.posts.PostsListUserActionsListener" />
     </data>
 
     <LinearLayout
         style="@style/VerticalLinearLayout"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
+        android:onClick="@{() -> listener.onClickPost(post)}"
         android:padding="@dimen/sixteen">
 
         <TextView
             android:id="@+id/item_post_title"
             style="@style/PostTitle"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{post.title}"
             tools:text="@tools:sample/lorem/random" />
 
@@ -25,6 +32,8 @@
             android:id="@+id/item_post_content"
             style="@style/PostContent"
             android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="@{post.content}"
             tools:text="@tools:sample/lorem/random" />
 

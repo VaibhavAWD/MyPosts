@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.vaibhavdhunde.practice.myposts.R
 import com.vaibhavdhunde.practice.myposts.databinding.FragmentPostsBinding
 import com.vaibhavdhunde.practice.myposts.util.EventObserver
@@ -34,9 +35,11 @@ class PostsFragment : Fragment(), KodeinAware {
 
         viewModel = obtainViewModel(PostsViewModel::class.java, viewModelFactory)
 
+        val postsListAdapter = PostsListAdapter(viewModel)
+
         binding = FragmentPostsBinding.bind(rootView).apply {
             viewmodel = this@PostsFragment.viewModel
-            adapter = PostsListAdapter()
+            adapter = postsListAdapter
             lifecycleOwner = this@PostsFragment.viewLifecycleOwner
         }
 
@@ -46,6 +49,7 @@ class PostsFragment : Fragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupEvents()
+        setupNavigation()
         loadPosts()
     }
 
@@ -55,8 +59,19 @@ class PostsFragment : Fragment(), KodeinAware {
         })
     }
 
+    private fun setupNavigation() {
+        binding.viewmodel?.openPostDetails?.observe(this, EventObserver { postId ->
+            navigateToFragmentDetails(postId)
+        })
+    }
+
     private fun loadPosts() {
         binding.viewmodel?.loadPosts()
+    }
+
+    private fun navigateToFragmentDetails(postId: Int) {
+        val action = PostsFragmentDirections.actionOpenPostDetails(postId)
+        findNavController().navigate(action)
     }
 
 }
