@@ -31,6 +31,9 @@ task clean(type: Delete) {
 }
 
 ext {
+    // Material version
+    material_version = "1.1.0-alpha10"
+
     // Arch Component versions
     lifecycle_version = "2.2.0-alpha05"
     // End Arch Component versions
