@@ -4,6 +4,7 @@ import android.app.Application
 import com.vaibhavdhunde.practice.myposts.BuildConfig
 import com.vaibhavdhunde.practice.myposts.api.NetworkInterceptor
 import com.vaibhavdhunde.practice.myposts.api.PostsApi
+import com.vaibhavdhunde.practice.myposts.data.PostsRepository
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -19,6 +20,7 @@ class MyPostsApplication : Application(), KodeinAware {
         import(androidXModule(this@MyPostsApplication))
         bind() from singleton { NetworkInterceptor(instance()) }
         bind() from singleton { PostsApi(instance()) }
+        bind() from singleton { PostsRepository(instance()) }
     }
 
     override fun onCreate() {
