@@ -30,11 +30,11 @@ class PostsViewModel(private val repository: PostsRepository) : ViewModel() {
 
     fun loadPosts() {
         _isDataLoading.value?.let { isLoading ->
-            if (isLoading) return@let
+            if (isLoading) return
         }
 
         _isDataAvailable.value?.let { isAvailable ->
-            if (isAvailable) return@let
+            if (isAvailable) return
         }
 
         viewModelScope.launch {
